@@ -1,0 +1,41 @@
+
+
+#Variable declaration
+	# a-ammonia   b-air   c-water
+T = 300  					# [K]
+P = 101.3  					# [kPa]
+R = 8.314  					# [cubic m.Pa/mole.K]
+V_b = 15.0  					# [cubic m]
+m_a = 10.0  					# [kg]
+m_c = 45.0  					# [kg]
+M_a = 17.0  					# [molecular mass of ammonia, gram/mole
+M_c = 18.0  					# [molecular mass of water, gram/mole]
+
+
+#Calculations
+
+n_b = V_b*P/(R*T)  				# [kmole]
+n_a = m_a/M_a  					# [kmole]
+n_c = m_c/M_c  					# [kmole]
+
+import math
+from scipy.optimize import fsolve
+
+def f12(L_a):
+    return(((n_a-L_a)/(n_b+n_a-L_a))-(10.51*(0.156+(0.622*(L_a/(n_c+L_a))*(5.765*(L_a/(n_c+L_a))-1)))*(L_a/(n_c+L_a)))) 
+L_a = fsolve(f12,0.3)  # [kmole]
+
+x_a = L_a/(n_c+L_a) 
+y_a = (n_a-L_a)/(n_b+n_a-L_a) 
+gammma_a = 0.156+0.622*x_a*(5.765*x_a-1) 
+
+#Result
+
+print"At equilibrium the ammonia content of the liquid phase will be",x_a[0] 
+print"At equilibrium the ammonia content of the gas phase will be",y_a[0] 
+print"The amount of ammonia absorbed by the water will be",round(L_a[0],3),"kmole"   
+
+At equilibrium the ammonia content of the liquid phase will be 0.144495485596
+At equilibrium the ammonia content of the gas phase will be 0.214117393686
+The amount of ammonia absorbed by the water will be 0.422 kmole
+
